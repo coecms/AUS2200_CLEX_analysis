@@ -9,11 +9,11 @@
 exp_names = ['aus2200'] # ['User Defined MARSID']        # These appear as legend titles (changed)
 num_exp=1
 
-date_fmt    = '%Y%m%dT%HZ' # '%Y%m%d%H' (changed)
-adjust_basedate = True     # loop over basedates
+date_fmt    = "%Y%m%dT%H%MZ" # '%Y%m%d%H' (changed)
+adjust_basedate = False     # loop over basedates
                            #  so date0, date1 and date_last are OBS dates
 dates       = ["20220222T0600Z"] # ["User Defined"] # first date for expt0 (changed)
-date_last   = ["20220222T1200Z"] # "User Defined" # last date (changed)
+date_last   = "20220222T1200Z" # "User Defined" # last date (changed)
 
 date_inc    = 6 # 24          # hours between forecasts (changed)
 fc_steps    = ['1'] # ['18']        # forecast step to use (changed)
@@ -25,12 +25,12 @@ fc_offsets    = [None]
 
 fname_fcstep = 'zzz'   # dummy value to filenames written to text files properly
 in_fnames=['','']
-in_fnames[0] = "'/scratch/public/pjs548/aus2200_v2/obs_int'+exp_names[0]+'_'+date_fmt+'.nc'" # "'example'" #"EXAMPLE>> exp_name0+'/%Y%m/obs_'+date_fmt+'_f'+fname_fcstep.zfill(3)+'.nc'" (changed)
+in_fnames[0] = "'/scratch/public/pjs548/aus2200_v2/obs_int/'+exp_names[0]+'_'+date_fmt+'.nc'" # "'example'" #"EXAMPLE>> exp_name0+'/%Y%m/obs_'+date_fmt+'_f'+fname_fcstep.zfill(3)+'.nc'" (changed)
 #in_fnames[1] = "EXAMPLE>> exp_name1+'/%Y%m/obs_'+date_fmt+'_f'+fname_fcstep.zfill(3)+'.nc'"
 fname_out = "'example'" #"EXAMPLE>> exp_name0+'_'+exp_name1+'_f'+fc_steps[0]+'_'+dates[0]+'_'+date_last+'_'"
 
-header      = 'EXAMPLE>>   2m dewpoint temperature APS2-APS1 G, FC='+fc_steps[0]+ \
-                  ' height corrected , obs time='+dates[0]+' to '+date_last
+header      = 'EXAMPLE'#>>   2m dewpoint temperature APS2-APS1 G, FC='+fc_steps[0]+ \
+                  #' height corrected , obs time='+dates[0]+' to '+date_last
 
 model_field   = 'adj_screen_temperature'
 obs_field     = 'obs_screen_temperature'

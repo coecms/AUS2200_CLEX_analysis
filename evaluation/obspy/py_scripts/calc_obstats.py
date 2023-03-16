@@ -13,11 +13,13 @@
 # Get configuration
 #####################################
 import os,sys
+sys.path=['', '/projects/access/apps/odbserver/0.16.2-ops-intel1903-ompi402/lib/python2.7/site-packages', '/g/data/access/varpy/build/varpy/2021.03.0_patched', '/g/data/dp9/pjs548/mosrs_utils/r5885_obspy', '/g/data/hh5/public/apps/miniconda3/envs/analysis3-22.10/lib/python39.zip', '/g/data/hh5/public/apps/miniconda3/envs/analysis3-22.10/lib/python3.9', '/g/data/hh5/public/apps/miniconda3/envs/analysis3-22.10/lib/python3.9/lib-dynload', '/g/data/hh5/public/apps/miniconda3/envs/analysis3-22.10/lib/python3.9/site-packages', '/g/data/hh5/public/apps/miniconda3/envs/analysis3-22.10/lib/python3.9/site-packages/cdat_info-8.2.1-py3.9.egg']
+os.environ["PYTHONPATH"]="/g/data/dp9/pjs548/mosrs_utils/r5885_obspy/util_helpers"
 from pathlib import Path
 import obs_py as opy
 
-PKG_PATH = Path(__file__).parent.absolute()
-
+# PKG_PATH = Path(__file__).parent.absolute()
+PKG_PATH = "/g/data/tm70/dm5220/AUS2200_CLEX_analysis/evaluation/obspy/py_scripts"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def check_file (fname, debug=None):
        """
