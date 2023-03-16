@@ -1,0 +1,471 @@
+---
+use_end_dt: False    # obs at end of data assimilation window are NOT included. Only at start of window
+mars_ncdf.0:
+    time_type: date_time
+    vtime_var: valid_time
+    vdate_var: valid_date
+    btime_var: base_time
+    bdate_var: base_date
+    fc_type: fcmm
+    lev_type: sfc
+    pert_id:
+    surface_height: 
+        ndim: 2
+        fname: topog.nc
+        fvar_name: topog
+        fc_type: an
+        lev_type: sfc
+    lsm: # land sea ice mask (assume sea=0, land = +/- 1)
+        ndim: 2
+        fname: lnd_mask.nc
+        fvar_name: lnd_mask
+        fc_type: an
+        lev_type: sfc
+    screen_temperature: # screen level (2m) air temperature
+        fname: temp_scrn.nc
+        fvar_name: temp_scrn
+    screen_dew_point: # screen level (2m) dew point
+        fname: dewpt_scrn.nc
+        fvar_name: dewpt_scrn
+    screen_relative_humidity: # screen level (2m) relative humidity
+        fname: rh_scrn.nc
+        fvar_name: rh_scrn
+    screen_specific_humidity: # screen level (2m) specific humidity
+        fname: qsair_scrn.nc
+        fvar_name: qsair_scrn
+    10m_zonal_wind: # 10m zonal wind
+        fname: uwnd10m.nc
+        fvar_name: uwnd10m
+    10m_meridional_wind: # 10m meridional wind
+        fname: vwnd10m.nc
+        fvar_name: vwnd10m
+    10m_windgust: # 10m gust strength
+        fname: wndgust10m.nc
+        fvar_name: wndgust10m
+    screen_pressure: # surface pressure
+        fname: sfc_pres.nc
+        fvar_name: sfc_pres
+    lev1_pressure: # level 1 pressure
+        fname: pressure.nc
+        fvar_name: pressure
+        fc_type: fcmm
+        lev_type: ml
+    lev1_specific_humidity: # level 1 specific humidity
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fcmm
+        lev_type: ml
+    roughness_length: 
+        fname: veg_ruff.nc
+        fvar_name: veg_ruff
+        fc_type: fc
+        lev_type: sfc
+    ml_zonal_wind: 
+        fname: wnd_ucmp.nc
+        fvar_name: wnd_ucmp
+        fc_type: fc
+        lev_type: ml
+    ml_meridional_wind: 
+        fname: wnd_vcmp.nc
+        fvar_name: wnd_vcmp
+        fc_type: fc
+        lev_type: ml
+    ml_specific_humidity: 
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fc
+        lev_type: ml
+    ml_temperature: 
+        fname: air_temp.nc
+        fvar_name: air_temp
+        fc_type: fc
+        lev_type: ml
+    ml_pressure: 
+        fname: pressure.nc
+        fvar_name: pressure
+        fc_type: fc
+        lev_type: ml
+    pl_zonal_wind: 
+        fname: wnd_ucmp.nc
+        fvar_name: wnd_ucmp
+        fc_type: fc
+        lev_type: pl
+    pl_meridional_wind: 
+        fname: wnd_vcmp.nc
+        fvar_name: wnd_vcmp
+        fc_type: fc
+        lev_type: pl
+    pl_specific_humidity: 
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fc
+        lev_type: pl
+    pl_temperature: 
+        fname: air_temp.nc
+        fvar_name: air_temp
+        fc_type: fc
+        lev_type: pl
+    pl_geopotential: 
+        fname: geop_hght.nc
+        fvar_name: geop_hght
+        fc_type: fc
+        lev_type: pl
+iris_ncdf.0:
+    time_type: timestamp
+    vtime_var: time
+    vtime_ref_format: "%Y-%m-%d %H:%M:%S"
+    btime_var: time
+    btime_ref_format: "%Y-%m-%d %H:%M:%S"
+    fc_type: fcmm
+    lev_type: sfc
+    pert_id:
+    surface_height: 
+        ndim: 2
+        fname: topog
+        fvar_name: topog
+        lev_type: slv
+    lsm: # land sea ice mask (assume sea=0, land = +/- 1)
+        ndim: 2
+        fname: lnd_mask
+        fvar_name: lnd_mask
+        lev_type: slv
+    screen_temperature: # screen level (2m) air temperature
+        fname: temp_scrn
+        fvar_name: temp_scrn
+    screen_dew_point: # screen level (2m) dew point
+        fname: dewpt_scrn
+        fvar_name: dewpt_scrn
+    screen_relative_humidity: # screen level (2m) relative humidity
+        fname: rh_scrn
+        fvar_name: rh_scrn
+    10m_zonal_wind: # 10m zonal wind
+        fname: uwnd10m
+        fvar_name: uwnd10m
+    10m_meridional_wind: # 10m meridional wind
+        fname: vwnd10m
+        fvar_name: vwnd10m
+    10m_windgust: # 10m gust strength
+        fname: wndgust10m
+        fvar_name: wndgust10m
+    screen_pressure: # surface pressure
+        fname: sfc_pres
+        fvar_name: sfc_pres
+    lev1_pressure: # level 1 pressure
+        fname: pressure
+        fvar_name: pressure
+        fc_type: fcmm
+        lev_type: ml
+    lev1_specific_humidity: # level 1 specific humidity
+        fname: spec_hum
+        fvar_name: spec_hum
+        fc_type: fcmm
+        lev_type: ml
+    roughness_length: 
+        fname: veg_ruff
+        fvar_name: veg_ruff
+        fc_type: fc
+        lev_type: sfc
+    ml_zonal_wind: 
+        fname: wnd_ucmp.nc
+        fvar_name: wnd_ucmp
+        fc_type: fc
+        lev_type: ml
+    ml_meridional_wind: 
+        fname: wnd_vcmp.nc
+        fvar_name: wnd_vcmp
+        fc_type: fc
+        lev_type: ml
+    ml_specific_humidity: 
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fc
+        lev_type: ml
+    ml_temperature: 
+        fname: air_temp.nc
+        fvar_name: air_temp
+        fc_type: fc
+        lev_type: ml
+    ml_pressure: 
+        fname: pressure.nc
+        fvar_name: pressure
+        fc_type: fc
+        lev_type: ml
+    pl_zonal_wind: 
+        fname: wnd_ucmp.nc
+        fvar_name: wnd_ucmp
+        fc_type: fc
+        lev_type: pl
+    pl_meridional_wind: 
+        fname: wnd_vcmp.nc
+        fvar_name: wnd_vcmp
+        fc_type: fc
+        lev_type: pl
+    pl_specific_humidity: 
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fc
+        lev_type: pl
+    pl_temperature: 
+        fname: air_temp.nc
+        fvar_name: air_temp
+        fc_type: fc
+        lev_type: pl
+    pl_geopotential: 
+        fname: geop_hght.nc
+        fvar_name: geop_hght
+        fc_type: fc
+        lev_type: pl
+mars_ncdf.1:
+    time_type: timestamp
+    vtime_var: time
+    vtime_ref_format: "%Y-%m-%d %H:%M:%S"
+    btime_var: time
+    btime_ref_format: "%Y-%m-%d %H:%M:%S"
+    fc_type: fcmm
+    lev_type: sfc
+    pert_id:
+    surface_height: 
+        ndim: 2
+        fname: topog.nc
+        fvar_name: topog
+        fc_type: an
+        lev_type: sfc
+    lsm: # land sea ice mask (assume sea=0, land = +/- 1)
+        ndim: 2
+        fname: lnd_mask.nc
+        fvar_name: lnd_mask
+        fc_type: an
+        lev_type: sfc
+    screen_temperature: # screen level (2m) air temperature
+        fname: temp_scrn.nc
+        fvar_name: temp_scrn
+    screen_dew_point: # screen level (2m) dew point
+        fname: dewpt_scrn.nc
+        fvar_name: dewpt_scrn
+    screen_relative_humidity: # screen level (2m) relative humidity
+        fname: rh_scrn.nc
+        fvar_name: rh_scrn
+    screen_specific_humidity: # screen level (2m) specific humidity
+        fname: qsair_scrn.nc
+        fvar_name: qsair_scrn
+    10m_zonal_wind: # 10m zonal wind
+        fname: uwnd10m.nc
+        fvar_name: uwnd10m
+    10m_meridional_wind: # 10m meridional wind
+        fname: vwnd10m.nc
+        fvar_name: vwnd10m
+    10m_windgust: # 10m gust strength
+        fname: wndgust10m.nc
+        fvar_name: wndgust10m
+    screen_pressure: # surface pressure
+        fname: sfc_pres.nc
+        fvar_name: sfc_pres
+    lev1_pressure: # level 1 pressure
+        fname: pressure.nc
+        fvar_name: pressure
+        fc_type: fcmm
+        lev_type: ml
+    lev1_specific_humidity: # level 1 specific humidity
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fcmm
+        lev_type: ml
+    roughness_length: 
+        fname: veg_ruff.nc
+        fvar_name: veg_ruff
+        fc_type: fc
+        lev_type: sfc
+    ml_zonal_wind: 
+        fname: wnd_ucmp.nc
+        fvar_name: wnd_ucmp
+        fc_type: fc
+        lev_type: ml
+    ml_meridional_wind: 
+        fname: wnd_vcmp.nc
+        fvar_name: wnd_vcmp
+        fc_type: fc
+        lev_type: ml
+    ml_specific_humidity: 
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fc
+        lev_type: ml
+    ml_temperature: 
+        fname: air_temp.nc
+        fvar_name: air_temp
+        fc_type: fc
+        lev_type: ml
+    ml_pressure: 
+        fname: pressure.nc
+        fvar_name: pressure
+        fc_type: fc
+        lev_type: ml
+    pl_zonal_wind: 
+        fname: wnd_ucmp.nc
+        fvar_name: wnd_ucmp
+        fc_type: fc
+        lev_type: pl
+    pl_meridional_wind: 
+        fname: wnd_vcmp.nc
+        fvar_name: wnd_vcmp
+        fc_type: fc
+        lev_type: pl
+    pl_specific_humidity: 
+        fname: spec_hum.nc
+        fvar_name: spec_hum
+        fc_type: fc
+        lev_type: pl
+    pl_temperature: 
+        fname: air_temp.nc
+        fvar_name: air_temp
+        fc_type: fc
+        lev_type: pl
+    pl_geopotential: 
+        fname: geop_hght.nc
+        fvar_name: geop_hght
+        fc_type: fc
+        lev_type: pl
+era5_ncdf.0:
+    time_type: timestamp
+    vtime_var: time
+    vtime_ref_format: "%Y-%m-%d %H:%M:%S"
+    btime_var: time
+    btime_ref_format: "%Y-%m-%d %H:%M:%S"
+    pert_id: per
+    fc_type:
+    lev_type: level00
+    surface_height: 
+        ndim: 2
+        fname: z
+        fvar_name: z
+        rescale_div: 9.80665   # divide geopotential by g to get m
+    lsm: # land sea ice mask (assume sea=0, land = +/- 1)
+        ndim: 2
+        fname: lsm
+        fvar_name: lsm
+    screen_temperature: # screen level (2m) air temperature
+        fname: 2t
+        fvar_name: 2t
+    screen_dew_point: # screen level (2m) dew point
+        fname: 2d
+        fvar_name: 2d
+    10m_zonal_wind: # 10m zonal wind
+        fname: 10u
+        fvar_name: 10u
+    10m_meridional_wind: # 10m meridional wind
+        fname: 10v
+        fvar_name: 10v
+    screen_pressure: # surface pressure
+        fname: sp
+        fvar_name: sp
+era5_monthly_ncdf.0:
+    time_type: timestamp
+    vtime_var: time
+    vtime_ref_format: "%Y-%m-%d %H:%M:%S.0"
+    btime_var: time
+    btime_ref_format: "%Y-%m-%d %H:%M:%S.0"
+    pert_id: per
+    fc_type:
+    lev_type: 'sfc'
+    surface_height: 
+        ndim: 2
+        fname: "single-levels/reanalysis/z/%Y/z_era5_oper_sfc_%Y%m01-%Y%m??.nc"
+        fvar_name: z
+        rescale_div: 9.80665   # divide geopotential by g to get m
+    lsm: # land sea ice mask (assume sea=0, land = +/- 1)
+        ndim: 2
+        fname: "single-levels/reanalysis/lsm/%Y/lsm_era5_oper_sfc_%Y%m01-%Y%m??.nc"
+        fvar_name: lsm
+    screen_temperature: # screen level (2m) air temperature
+        fname: "single-levels/reanalysis/2t/%Y/2t_era5_oper_sfc_%Y%m01-%Y%m??.nc"
+        fvar_name: t2m
+    screen_dew_point: # screen level (2m) dew point
+        fname: "single-levels/reanalysis/2d/%Y/2d_era5_oper_sfc_%Y%m01-%Y%m??.nc"
+        fvar_name: d2m
+    10m_zonal_wind: # 10m zonal wind
+        fname: "single-levels/reanalysis/10u/%Y/10u_era5_oper_sfc_%Y%m01-%Y%m??.nc"
+        fvar_name: u10
+    10m_meridional_wind: # 10m meridional wind
+        fname: "single-levels/reanalysis/10v/%Y/10v_era5_oper_sfc_%Y%m01-%Y%m??.nc"
+        fvar_name: v10
+    screen_pressure: # surface pressure
+        fname: "single-levels/reanalysis/sp/%Y/sp_era5_oper_sfc_%Y%m01-%Y%m??.nc"
+        fvar_name: sp
+barra2_ncdf.0:
+    time_type: timestamp
+    vtime_var: time
+    vtime_ref_format: "%Y-%m-%d"
+    btime_var: forecast_reference_time
+    btime_ref_format: "%Y-%m-%d"
+    pert_id: 
+    fc_type:
+    lev_type: nc/SLV1H
+    surface_height: 
+        ndim: 2
+        fname: /g/data/hd50/barra2/data/ancil_barra-r2/orography/globe30/qrparm.orog.nc
+        fvar_name: surface_altitude
+        no_date_check:
+    lsm: # land sea ice mask (assume sea=0, land = +/- 1)
+        ndim: 2
+        fname: /g/data/hd50/barra2/data/ancil_barra-r2/land_sea_mask/cci/qrparm.mask.nc
+        fvar_name: land_binary_mask
+        no_date_check:
+    screen_temperature: # screen level (2m) air temperature
+        fname: temp_scrn*
+        fvar_name: temp_scrn
+    screen_relative_humidity: # screen level (2m) air temperature
+        fname: rh_scrn*
+        fvar_name: rh_scrn
+    screen_specific_humidity: # screen level (2m) specific humidity
+        fname: spec_hum*
+        fvar_name: spec_hum
+    screen_specific_humidity: # screen level saturation specific_humidity
+        fname: qsair_scrn*
+        fvar_name: qsair_scrn
+    10m_zonal_wind: # 10m zonal wind
+        fname: uwnd10m*
+        fvar_name: uwnd10m
+    10m_meridional_wind: # 10m meridional wind
+        fname: vwnd10m*
+        fvar_name: vwnd10m
+    screen_pressure: # surface pressure
+        fname: sfc_pres*
+        fvar_name: sfc_pres
+barra1_ncdf.0:
+    time_type: timestamp
+    vtime_var: time
+    vtime_ref_format: "%Y-%m-%d %H:%M:%S"
+    btime_var: forecast_reference_time
+    btime_ref_format: "%Y-%m-%d %H:%M:%S"
+    pert_id: 
+    fc_type: forecast
+    lev_type: spec
+    screen_temperature: # screen level (2m) air temperature
+        fname: temp_scrn*%Y%m%dT%H%MZ*
+        fvar_name: temp_scrn
+    screen_specific_humidity: # screen level (2m) specific humidity
+        fname: spec_hum*%Y%m%dT%H%MZ*
+        fvar_name: spec_hum
+    screen_saturation_mixing_ratio: # screen level saturation mixing ratio
+        fname: qsair_scrn*%Y%m%dT%H%MZ*
+        fvar_name: qsair_scrn
+    10m_zonal_wind: # 10m zonal wind
+        fname: uwnd10m*%Y%m%dT%H%MZ*
+        fvar_name: uwnd10m
+    10m_meridional_wind: # 10m meridional wind
+        fname: "{{ fvar_name }}*%Y%m%dT%H%MZ*"
+        fvar_name: vwnd10m
+    screen_pressure: # surface pressure
+        fname: sfc_pres*%Y%m%dT%H%MZ*
+        fvar_name: sfc_pres
+    surface_height: 
+        ndim: 2
+        fname: /g/data/cj37/BARRA/BARRA_R/v1/static/topog-an-slv-PT0H-BARRA_R-v1.nc
+        fvar_name: topog
+        no_date_check:
+    lsm: # land sea ice mask (assume sea=0, land = +/- 1)
+        ndim: 2
+        fname: /g/data/cj37/BARRA/BARRA_R/v1/static/lnd_mask-an-slv-PT0H-BARRA_R-v1.nc
+        fvar_name: lnd_mask
+        no_date_check:
+
