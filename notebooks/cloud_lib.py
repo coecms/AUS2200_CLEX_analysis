@@ -1,6 +1,10 @@
 import xarray as xr
 import xgcm as xgcm
 import numpy as np
+'''
+cloud analysis library: 
+contact: Fadhlil R Muhammad, Corey Robinson, & Yi Huang
+'''
 
 
 def ctt_calc_icesnow(qis,qg,qc,qr,t,
@@ -10,8 +14,9 @@ def ctt_calc_icesnow(qis,qg,qc,qr,t,
                     celsius = True
                     ):
 
-    """ def ctt_calc_icesnow: calculates the CTT height based on qice+snow,qgraupel,
-        qcloud,qrain, and temperature. All must have the same dimensions. 
+    ''' 
+        def ctt_calc_icesnow: calculates the CTT height based on qice+snow,qgraupel,
+        qcloud,qrain, and temperature. All must have the same dimension size and name. 
         
         input variables:
         qis: Q ICE+SNOW
@@ -26,7 +31,7 @@ def ctt_calc_icesnow(qis,qg,qc,qr,t,
     
         thres    : threshold of the mixing ratio where CTT is defined; default = 0.00001 (0.01g/kg)
         celsius  : convert to celsius; default = True
-    """
+      '''
     
     sum_hydro = qis + qg + qc + qr
 
@@ -67,8 +72,9 @@ def ctt_calc(qi,qs,qg,qc,qr,t,                   #ice,snow,graupel,cloud,rain,te
             thres = 0.00001,
             celsius = True
             ):
-    """ def ctt_calc: calculates the CTT height based on qice,qsnow,qgraupel,
-        qcloud,qrain, and temperature. All must have the same dimensions. 
+    ''' 
+        def ctt_calc: calculates the CTT height based on qice,qsnow,qgraupel,
+        qcloud,qrain, and temperature. All must have the same dimension size and name. 
         
         input variables:
         qi:  Q ICE
@@ -84,7 +90,7 @@ def ctt_calc(qi,qs,qg,qc,qr,t,                   #ice,snow,graupel,cloud,rain,te
     
         thres    : threshold of the mixing ratio where CTT is defined; default = 0.00001 (0.01g/kg)
         celsius  : convert to celsius; default = True
-    """
+      '''
     sum_hydro = qi + qs + qg + qc + qr
 
     qsum = sum_hydro.rename('qsum')
