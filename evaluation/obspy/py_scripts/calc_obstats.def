@@ -1,0 +1,744 @@
+"""
+########################################################################
+#
+# Plot obs-forecast diffs from netcdf files (e.g. from interp_ob.py)
+#    TIME averaged
+#
+########################################################################
+"""
+exp_names = ['aus2200'] # ['User Defined MARSID']        # These appear as legend titles (changed)
+num_exp=1
+
+date_fmt    = "%Y%m%dT%H%MZ" # '%Y%m%d%H' (changed)
+adjust_basedate = False     # loop over basedates
+                           #  so date0, date1 and date_last are OBS dates
+dates       = ["20220222T0600Z"] # ["User Defined"] # first date for expt0 (changed)
+date_last   = "20220222T1200Z" # "User Defined" # last date (changed)
+
+date_inc    = 6 # 24          # hours between forecasts (changed)
+fc_steps    = ['1'] # ['18']        # forecast step to use (changed)
+fc_offsets    = [None]
+
+# Keep the outer quotes so that the string can be expanded as needed
+#    allowing for other script variables to be added with
+#    their value at the time
+
+fname_fcstep = 'zzz'   # dummy value to filenames written to text files properly
+in_fnames=['','']
+in_fnames[0] = "'/scratch/public/pjs548/aus2200_v2/obs_int/'+exp_names[0]+'_'+date_fmt+'.nc'" # "'example'" #"EXAMPLE>> exp_name0+'/%Y%m/obs_'+date_fmt+'_f'+fname_fcstep.zfill(3)+'.nc'" (changed)
+#in_fnames[1] = "EXAMPLE>> exp_name1+'/%Y%m/obs_'+date_fmt+'_f'+fname_fcstep.zfill(3)+'.nc'"
+fname_out = "'example'" #"EXAMPLE>> exp_name0+'_'+exp_name1+'_f'+fc_steps[0]+'_'+dates[0]+'_'+date_last+'_'"
+
+header      = 'EXAMPLE'#>>   2m dewpoint temperature APS2-APS1 G, FC='+fc_steps[0]+ \
+                  #' height corrected , obs time='+dates[0]+' to '+date_last
+
+model_field   = 'adj_screen_temperature'
+obs_field     = 'obs_screen_temperature'
+
+
+########################################################################
+#
+# The rest of this file can probably be left alone by beginners
+#    i.e. just delete everything below to create calc_obstats.cfg
+#
+########################################################################
+
+min_rep     = 10           # Keep > 2 so can calculate std.dev.
+num_exp     = 1         # compare two experiments
+obs_sort_keys = ['dt','id']      # keys used to index data
+diff_mins     = 180              # half-width for obs time window (minutes)
+
+
+domain    = None
+state_name="Aus"
+#domain = [ -37.3, -31.7, 148.2, 154.3]  # plot region (S,N,W,E)
+                                         # overrides previous 2 lines
+lat_range = None        # take values from domain
+lon_range = None        # take values from domain
+
+sdev_outlier = 2        # Number of standard devs for station to be iffy
+sdev_small   = 0.5      # Number of standard devs for station to have "small" sdev
+stn_id        = []              # List of stations to use (None => all)
+trace         = []          # trace print options
+debug         = False
+
+aux_fields   = []         # names of extra fields used in subsetting
+df_subset    = None
+upd_station_dict = False
+
+station_stats = True
+tseries_stats = True
+hourly_stats  = True
+obs_offset    = None
+obs_scale     = None
+#fc1_offset    = None
+stats_req     = ['bias','rmse','average value','stdev value','stdev error', 'gross_error', 'abs_error', 'sq_error']
+gross_error_tol = 5.
+max_ge_pc = 50.
+plot_max_def = 1        # Default max plotted value
+plot_min_def = -1       # Default min plotted value
+sdev_ddof = 0           # No. of degrees of freedom in std. deviation calculation
+
+json_type = 'HEX'        # Option to store real values as HEX rather than ASCII in JSON files
+
+legend_str={}
+for i in list(range(len(exp_names))):
+   legend_str['Model'+str(i)] = exp_names[i]
+legend_str['Obs'] = 'Obs'
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Example of function to subset the statistics
+#    Just convert Xdf_subset to df_subset
+# 
+def Xdf_subset( df ):
+    """
+    Generate a conditional subset of a DataFrame
+       example to only use light winds
+    """
+
+    return df[ df['obs_wind_speed'] < 5 ]
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def calc_stats( group, num_exp, stn_dict=None ):
+   """
+   Calculate stats based on a dataframe group
+     'tseries'    - tseries from dataframe
+     'refvalp'    - reference value for calculating no of
+               stations > refvalp 1std dev.
+     'refvalm'    - reference value for calculating no of
+               stations < refvalm, 1std dev.
+               Calculate std deviation with 0 degrees of freedom
+                 for refvalp & refvalm
+                 Is OK as only using for plotting limits
+     'plt_min'   - minimum value to plot
+     'plt_max'   - maximum value to plot
+     'plt_zero'  - plot zero line
+     'legend'    - string to use in legends
+     'file_suff' - suffix to use in file name
+     'ts_coplot' - Name of key on which should overlay plot
+                    e.g. ts_coplot : "Obs AvgValue" will plot
+                    stats given by key on same plot as Obs AvgValue
+     'pcnt_norm' - Name of key to use for normalizing percentage gain
+     'colour': mdl_colour[0], \
+   """
+   import numpy as np
+
+   # Assume NaNs have been dropped (df.dropna())
+   #   stats should be calculated across consistent data
+   #      i.e. all data present
+   # Otherwise will also get problems lining up dates for time series
+
+   # extract list of fields from group
+   for g_gname, g_group in group:
+      g_keys = list(g_group.keys())
+      break 
+
+   obs_colour = 'green'
+   mdl_colour = ['blue','red','gold','gray','violet']
+   #mdl1_colour = 'red'
+
+   stats={}
+   if 'diff_0' in g_keys:
+       if 'bias' in stats_req:
+          arr = group['diff_0'].mean()
+          stats['Model0 Bias'] = \
+               { 'tseries':arr, \
+                 'nrep':group['diff_0'].count(), \
+                 'refvalp':arr.mean()+arr.std(), \
+                 'refvalm':arr.mean()-arr.std(), \
+                 'plt_min':plot_min_def, \
+                 'plt_max':plot_max_def, \
+                 'plt_zero':True, \
+                 'ts_coplot':None, \
+                 'pcnt_norm':None, \
+                 'colour': mdl_colour[0], \
+                 'legend': legend_str['Model0'], \
+                 'file_suff':'bias0' }
+   
+       if 'stdev error' in stats_req:
+          arr = group['diff_0'].std(ddof=sdev_ddof).dropna()
+          nrep = group['diff_0'].count()
+          nrep_sd  = nrep[ nrep > sdev_ddof ]
+          if len(arr) > 0:
+             stats['Model0 ErrStdDev'] =  \
+                  { 'tseries':arr, \
+                    'nrep':nrep_sd, \
+                    'refvalp':sdev_outlier*arr.mean(), \
+                    'refvalm':sdev_small*arr.mean(), \
+                    'plt_min':0., \
+                    'plt_max':2*plot_max_def, \
+                    'plt_zero':True, \
+                    'ts_coplot':None, \
+                    'pcnt_norm':None, \
+                    'colour': mdl_colour[0], \
+                    'legend': legend_str['Model0'], \
+                    'file_suff':'sdev0' }
+
+   if 'rmse' in stats_req:
+       if ('diff_0' in g_keys) and ('SqErr_0' in g_keys) :
+           nrep0  = group['diff_0'].count()
+           sumsq0 = group['SqErr_0'].sum()
+           arr    = np.sqrt( sumsq0/nrep0 )
+           stats['Model0 RMSError']  =  \
+                { 'tseries':arr, \
+                  'nrep':group['diff_0'].count(), \
+                  'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+                  'plt_min':0., \
+                  'plt_max':2*plot_max_def, \
+                  'plt_zero':True, \
+                  'ts_coplot':None, \
+                  'pcnt_norm':None, \
+                  'colour': mdl_colour[0], \
+                  'legend': legend_str['Model0'], \
+                  'file_suff':'rmse0' }
+
+   if ('abs_error' in stats_req) and ('AbsErr_0' in g_keys) :
+       arr = group['AbsErr_0'].mean()
+       stats['Model0 AbsError']  =  \
+            { 'tseries':arr, \
+              'nrep':group['AbsErr_0'].count(), \
+              'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+              'plt_min':0., \
+              'plt_max':2*plot_max_def, \
+              'plt_zero':True, \
+              'ts_coplot':None, \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[0], \
+              'legend': legend_str['Model0'], \
+              'file_suff':'aerr0' }
+
+   if ('gross_error' in stats_req) and ('AbsErr_0' in g_keys) :
+       nrep  = group['AbsErr_0'].count()
+       darr = np.array([ (g > gross_error_tol).sum() for k,g in group['AbsErr_0'] ]) *100./nrep
+       tarr = list(group['AbsErr_0'].indices.keys())
+       tind = pd.MultiIndex.from_arrays( [tarr],names=['dt'])
+       arr  = pd.Series(darr, index=tind)
+       stats['Model0 GrossError Percentage']  =  \
+            { 'tseries':arr, \
+              'nrep':nrep, \
+              'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+              'plt_min':0., \
+              'plt_max':max_ge_pc, \
+              'plt_zero':True, \
+              'ts_coplot':None, \
+              'pcnt_norm':None, \
+              'units':'Percentage', \
+              'colour': mdl_colour[0], \
+              'legend': legend_str['Model0'], \
+              'file_suff':'gross0' }
+
+   for i in range(1,num_exp):
+     n=str(i)
+     if ('gross_error' in stats_req) and ('AbsErr_'+n in g_keys) :
+       nrep  = group['AbsErr_'+n].count()
+       darr = np.array([ (g > gross_error_tol).sum() for k,g in group['AbsErr_'+n] ]) *100./nrep
+       tarr = list(group['AbsErr_'+n].indices.keys())
+       tind = pd.MultiIndex.from_arrays( [tarr],names=['dt'])
+       arr  = pd.Series(darr, index=tind)
+       stats['Model'+n+' GrossError Percentage']  =  \
+            { 'tseries':arr, \
+              'nrep':nrep, \
+              'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+              'plt_min':0., \
+              'plt_max':max_ge_pc, \
+              'plt_zero':True, \
+              'ts_coplot':'Model0 GrossError Percentage', \
+              'pcnt_norm':None, \
+              'units':'Difference in Percentage', \
+              'colour': mdl_colour[i], \
+              'legend': legend_str['Model'+n], \
+              'file_suff':'gross'+n }
+
+   if ('sq_error' in stats_req) and ('SqErr_0' in g_keys) :
+       arr = group['SqErr_0'].mean()
+       stats['Model0 SqError']   =  \
+            { 'tseries':arr, \
+              'nrep':group['SqErr_0'].count(), \
+              'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+              'plt_min':0., \
+              'plt_max':4*plot_max_def**2, \
+              'plt_zero':True, \
+              'ts_coplot':None, \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[0], \
+              'legend': legend_str['Model0'], \
+              'file_suff':'sqerr0' }
+
+   if ( 'average value' in stats_req ):
+      arr = group[model_field].mean()
+      stats['Model0 AvgValue']  =  \
+               { 'tseries':arr, \
+                 'nrep':group[model_field].count(), \
+                 'refvalp':arr.mean()+arr.std(), \
+                 'refvalm':arr.mean()-arr.std(),  \
+                 'plt_min':arr.min(), \
+                 'plt_max':arr.max(), \
+                 'plt_zero':False, \
+                 'ts_coplot':'Obs AvgValue', \
+                 'pcnt_norm':None, \
+                 'colour': mdl_colour[0], \
+                 'legend': legend_str['Model0'], \
+                 'file_suff':'val0' }
+
+   if ( 'stdev value' in stats_req ):
+      arr = group[model_field].std(ddof=sdev_ddof).dropna()
+      nrep = group['diff_0'].count()
+      nrep_sd  = nrep[ nrep > sdev_ddof ]
+      if len(arr) > 0:
+         stats['Model0 ValStdDev'] =  \
+                { 'tseries':arr, \
+                  'nrep':nrep_sd, \
+                  'refvalp':arr.mean()+arr.std(), \
+                  'refvalm':arr.mean()-arr.std(), \
+                  'plt_min':0., \
+                  'plt_max':2*plot_max_def, \
+                  'plt_zero':True, \
+                  'ts_coplot':None, \
+                  'pcnt_norm':None, \
+                  'colour': mdl_colour[0], \
+                 'legend': legend_str['Model0'], \
+                  'file_suff':'valsd0' }
+
+   for i in range(1,num_exp):
+     n=str(i)
+     if 'diff_'+n in g_keys:
+       if 'bias' in stats_req:
+         arr = group['diff_'+n].mean()
+         stats['Model'+n+' Bias']      =  \
+               { 'tseries':arr, \
+                 'nrep':group['diff_'+n].count(), \
+                 'refvalp':arr.mean()+arr.std(), \
+                 'refvalm':arr.mean()-arr.std(), \
+                 'plt_min':plot_min_def, \
+                 'plt_max':plot_max_def, \
+                 'plt_zero':True, \
+                 'ts_coplot':'Model0 Bias', \
+                 'pcnt_norm':None, \
+                 'colour': mdl_colour[i], \
+                 'legend': legend_str['Model'+n], \
+                 'file_suff':'bias'+n }
+         if 'diff_0' in g_keys:
+            arr0 = group['diff_'+n].mean()
+            stats['Model'+n+' Bias']['refvalp'+n] = arr0.mean()+arr0.std()
+            stats['Model'+n+' Bias']['refvalm'+n] = arr0.mean()-arr0.std()
+       
+       if 'stdev error' in stats_req:
+         arr = group['diff_'+n].std(ddof=sdev_ddof).dropna()
+         nrep = group['diff_0'].count()
+         nrep_sd  = nrep[ nrep > sdev_ddof ]
+         if len(arr) > 0:
+            stats['Model'+n+' ErrStdDev'] =  \
+               { 'tseries':arr, \
+                 'nrep':nrep_sd, \
+                 'refvalp':arr.mean()+arr.std(), \
+                 'refvalm':arr.mean()-arr.std(), \
+                 'plt_min':0., \
+                 'plt_max':2*plot_max_def, \
+                 'plt_zero':True, \
+                 'ts_coplot':'Model0 ErrStdDev', \
+                 'pcnt_norm':None, \
+                 'colour': mdl_colour[i], \
+                 'legend': legend_str['Model'+n], \
+                 'file_suff':'sdev'+n }
+   
+   for i in range(1,num_exp):
+     n=str(i)
+     if ('abs_error' in stats_req) and ('AbsErr_'+n in g_keys):
+       arr = group['AbsErr_'+n].mean()
+       stats['Model'+n+' AbsError']  =  \
+            { 'tseries':arr, \
+              'nrep':group['AbsErr_'+n].count(), \
+              'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+              'plt_min':plot_min_def, \
+              'plt_max':2*plot_max_def, \
+              'plt_zero':True, \
+              'ts_coplot':'Model0 AbsError', \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[i], \
+              'legend': legend_str['Model'+n], \
+              'file_suff':'aerr'+n }
+     
+     if ('sq_error' in stats_req) and ('SqErr_'+n in g_keys):
+       arr = group['SqErr_'+n].mean()
+       stats['Model'+n+' SqError']   =  \
+            { 'tseries':arr, \
+              'nrep':group['SqErr_'+n].count(), \
+              'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+              'plt_min':0., \
+              'plt_max':4*plot_max_def**2, \
+              'plt_zero':True, \
+              'ts_coplot':'Model0 SqError', \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[i], \
+              'legend': legend_str['Model'+n], \
+              'file_suff':'sqerr'+n }
+     
+     if ('rmse' in stats_req) and ('diff_'+n in g_keys) and ('SqErr_'+n in g_keys):
+       nrep1  = group['diff_'+n].count()
+       sumsq1 = group['SqErr_'+n].sum()
+       arr    = np.sqrt( sumsq1/nrep1 )
+       stats['Model'+n+' RMSError']  =  \
+            { 'tseries':arr, \
+              'nrep':nrep1, \
+              'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+              'plt_min':0., \
+              'plt_max':2*plot_max_def, \
+              'plt_zero':True, \
+              'ts_coplot':'Model0 RMSError', \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[i], \
+              'legend': legend_str['Model'+n], \
+              'file_suff':'rmse'+n }
+
+   for i in range(1,num_exp):
+     n=str(i)
+     if model_fields[i] in g_keys:
+       if 'average value' in stats_req:
+          arr = group[model_fields[i]].mean()
+          stats['Model'+n+' AvgValue']  =  \
+               { 'tseries':arr, \
+                 'nrep':group[model_fields[i]].count(), \
+                 'refvalp':arr.mean()+arr.std(), \
+                 'refvalm':arr.mean()-arr.std(), \
+                 'plt_min':arr.min(), \
+                 'plt_max':arr.max(), \
+                 'plt_zero':False, \
+                 'ts_coplot':'Obs AvgValue', \
+                 'pcnt_norm':None, \
+                 'colour': mdl_colour[i], \
+                 'legend': legend_str['Model'+n], \
+                 'file_suff':'val'+n }
+
+       if 'stdev error' in stats_req:
+          arr = group[model_fields[i]].std(ddof=sdev_ddof).dropna()
+          nrep = group['diff_0'].count()
+          nrep_sd  = nrep[ nrep > sdev_ddof ]
+          if len(arr) > 0:
+             stats['Model'+n+' ValStdDev'] =  \
+               { 'tseries':arr, \
+                 'nrep':nrep_sd, \
+                 'refvalp':arr.mean()+arr.std(), \
+                 'refvalm':arr.mean()-arr.std(), \
+                 'plt_min':0., \
+                 'plt_max':2*plot_max_def, \
+                 'plt_zero':True, \
+                 'ts_coplot':'Model0 ValStdDev', \
+                 'pcnt_norm':None, \
+                 'colour': mdl_colour[i], \
+                 'legend': legend_str['Model'+n], \
+                 'file_suff':'valsd'+n }
+
+
+   if ('average value' in stats_req):
+      arr = group[obs_field].mean()
+      stats['Obs AvgValue']     =  \
+               { 'tseries':arr, \
+                 'nrep':group[obs_field].count(), \
+                 'refvalp':arr.mean(), 'refvalm':arr.mean(), \
+                 'plt_min':arr.min(), \
+                 'plt_max':arr.max(), \
+                 'plt_zero':False, \
+                 'ts_coplot':None, \
+                 'pcnt_norm':None, \
+                 'colour': obs_colour, \
+                 'legend': legend_str['Obs'], \
+                 'file_suff':'valob' }
+
+   if ('stdev value' in stats_req):
+      arr = group[obs_field].std(ddof=sdev_ddof).dropna()
+      nrep = group['diff_0'].count()
+      nrep_sd  = nrep[ nrep > sdev_ddof ]
+      if len(arr) > 0:
+          stats['Obs ValStdDev']    =  \
+               { 'tseries':arr, \
+                 'nrep':nrep_sd, \
+                 'refvalp':arr.mean()-arr.std(), \
+                 'refvalm':arr.mean()-arr.std(), \
+                 'plt_min':0., \
+                 'plt_zero':True, \
+                 'ts_coplot':None, \
+                 'pcnt_norm':None, \
+                 'colour': obs_colour, \
+                 'plt_max':2*plot_max_def, \
+                 'legend': legend_str['Obs'], \
+                 'file_suff':'sdevob' }
+
+   for i in range(1,num_exp):
+     n=str(i)
+     if 'Model'+n+' Bias' in stats \
+          and 'Model0 Bias' in stats:
+       arr = stats['Model'+n+' Bias']['tseries']   \
+                - stats['Model0 Bias']['tseries']
+       if i > 1: ts_cplt='Bias Difference Model1-Model0'
+       else: ts_cplt=None
+       stats['Bias Difference Model'+n+'-Model0'] = \
+            { 'tseries':arr, \
+              'nrep':stats['Model'+n+' Bias']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':plot_min_def/2.,
+              'plt_max':plot_max_def/2., \
+              'plt_zero':True, \
+              'ts_coplot':ts_cplt, \
+              'pcnt_norm':'Model0 Bias', \
+              'colour': mdl_colour[i-1], \
+              'legend': legend_str['Model'+n]+'-'+legend_str['Model0'], \
+              'file_suff':'biasdiff'+n }
+     
+     if 'Model'+n+' ErrStdDev' in stats \
+       and 'Model0 ErrStdDev' in stats:
+         arr = stats['Model'+n+' ErrStdDev']['tseries'] \
+               - stats['Model0 ErrStdDev']['tseries']
+         if i > 1: ts_cplt='ErrStdDev Difference Model1-Model0'
+         else: ts_cplt=None
+         stats['ErrStdDev Difference Model'+n+'-Model0'] = \
+            { 'tseries': arr, \
+              'nrep':stats['Model'+n+' ErrStdDev']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':plot_min_def/2., \
+              'plt_max':plot_max_def/2., \
+              'plt_zero':True, \
+              'ts_coplot':ts_cplt, \
+              'pcnt_norm':'Model0 ErrStdDev', \
+              'colour': mdl_colour[i-1], \
+              'legend': legend_str['Model'+n]+'-'+legend_str['Model0'], \
+              'file_suff':'sdevdiff'+n }
+     
+     if 'Model'+n+' RMSError' in stats \
+       and 'Model0 RMSError' in stats:
+         arr = stats['Model'+n+' RMSError']['tseries'] \
+                - stats['Model0 RMSError']['tseries']
+         if i > 1: ts_cplt='RMSE Difference Model1-Model0'
+         else: ts_cplt=None
+         stats['RMSE Difference Model'+n+'-Model0'] = \
+            { 'tseries': arr, \
+              'nrep':stats['Model'+n+' RMSError']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':plot_min_def/2., \
+              'plt_max':plot_max_def/2., \
+              'plt_zero':True, \
+              'ts_coplot':ts_cplt, \
+              'pcnt_norm':'Model0 RMSError', \
+              'colour': mdl_colour[i-1], \
+              'legend': legend_str['Model'+n]+'-'+legend_str['Model0'], \
+              'file_suff':'rmsediff'+n }
+
+     if 'Model'+n+' GrossError Percentage' in stats \
+       and 'Model0 GrossError Percentage' in stats:
+         arr = stats['Model'+n+' GrossError Percentage']['tseries'] \
+                - stats['Model0 GrossError Percentage']['tseries']
+         if i > 1: ts_cplt='GrossErrorPercentage Difference Model1-Model0'
+         else: ts_cplt=None
+         stats['GrossErrorPercentage Difference Model'+n+'-Model0'] = \
+            { 'tseries': arr, \
+              'nrep':stats['Model'+n+' GrossError Percentage']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':-max_ge_pc, \
+              'plt_max':max_ge_pc, \
+              'plt_zero':True, \
+              'ts_coplot':ts_cplt, \
+              'pcnt_norm':None, \
+              'units':'Percentage', \
+              'colour': mdl_colour[i-1], \
+              'legend': legend_str['Model'+n]+'-'+legend_str['Model0'], \
+              'file_suff':'grossdiff'+n }
+
+     if 'Model'+n+' AbsError' in stats \
+       and 'Model0 AbsError' in stats:
+         arr = stats['Model'+n+' AbsError']['tseries'] \
+                - stats['Model0 AbsError']['tseries']
+         if i > 1: ts_cplt='AbsErr Difference Model1-Model0'
+         else: ts_cplt=None
+         stats['AbsErr Difference Model'+n+'-Model0'] = \
+            { 'tseries':arr, \
+              'nrep':stats['Model'+n+' AbsError']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':plot_min_def/2., \
+              'plt_max':plot_max_def/2., \
+              'ts_coplot':ts_cplt, \
+              'pcnt_norm':'Model0 AbsError', \
+              'colour': mdl_colour[i-1], \
+              'plt_zero':True, \
+              'legend': legend_str['Model'+n]+'-'+legend_str['Model0'], \
+              'file_suff':'aerrdiff'+n }
+
+     if 'Model'+n+' SqError' in stats \
+       and 'Model0 SqError' in stats:
+         arr = stats['Model'+n+' SqError']['tseries'] \
+                - stats['Model0 SqError']['tseries']
+         if i > 1: ts_cplt='SqErr Difference Model1-Model0'
+         else: ts_cplt=None
+         stats['SqErr Difference Model'+n+'-Model0'] = \
+            { 'tseries':arr, \
+              'nrep':stats['Model'+n+' SqError']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':-(plot_min_def/2.)**2, \
+              'plt_max':(plot_max_def/2.)**2, \
+              'plt_zero':True, \
+              'ts_coplot':ts_cplt, \
+              'pcnt_norm':'Model0 SqError', \
+              'colour': mdl_colour[i-1], \
+              'legend': legend_str['Model'+n]+'-'+legend_str['Model0'], \
+              'file_suff':'sqerrdiff'+n }
+
+   #Calculate maxs
+   AEarr=[]
+   SEarr=[]
+   REarr=[]
+   ESDarr=[]
+   for i in range(num_exp):
+      n=str(i)
+      if 'Model'+n+' AbsError' in stats \
+         and 'Model0 AbsError' in stats:
+            AEarr.append(stats['Model'+n+' AbsError']['tseries'])
+     
+      if 'Model'+n+' SqError' in stats \
+         and 'Model0 SqError' in stats:
+            SEarr.append(stats['Model'+n+' SqError']['tseries'])
+         
+      if 'Model'+n+' RMSError' in stats \
+         and 'Model0 RMSError' in stats:
+            REarr.append(stats['Model'+n+' RMSError']['tseries'])
+     
+      if 'Model'+n+' ErrStdDev' in stats \
+         and 'Model0 ErrStdDev' in stats:
+            ESDarr.append(stats['Model'+n+' ErrStdDev']['tseries'])
+     
+   if len(REarr)>0:
+      arr=REarr[0].copy()
+      for xx in REarr[1:]:
+          arr=arr.combine(xx,max)
+      stats['Max RMSError'] = \
+            { 'tseries': arr, \
+              'nrep':stats['Model'+n+' RMSError']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':plot_min_def/2., \
+              'plt_max':plot_max_def/2., \
+              'plt_zero':True, \
+              'ts_coplot':None, \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[0], \
+              'legend': legend_str['Model'+n], \
+              'file_suff':'rmsemax' }
+
+   if len(AEarr)>0:
+      arr=AEarr[0].copy()
+      for xx in AEarr[1:]:
+          arr=arr.combine(xx,max)
+      stats['Max AbsErr'] = \
+            { 'tseries':arr, \
+              'nrep':stats['Model'+n+' AbsError']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':plot_min_def/2., \
+              'plt_max':plot_max_def/2., \
+              'ts_coplot':None, \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[0], \
+              'plt_zero':True, \
+              'file_suff':'aerrmax' }
+     
+   if len(SEarr)>0:
+      arr=SEarr[0].copy()
+      for xx in SEarr[1:]:
+          arr=arr.combine(xx,max)
+      stats['Max SqErr'] = \
+            { 'tseries':arr, \
+              'nrep':stats['Model'+n+' SqError']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':-(plot_min_def/2.)**2, \
+              'plt_max':(plot_max_def/2.)**2, \
+              'plt_zero':True, \
+              'ts_coplot':None, \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[0], \
+              'file_suff':'sqerrmax' }
+
+   if len(ESDarr)>0:
+      arr=ESDarr[0].copy()
+      for xx in ESDarr[1:]:
+          arr=arr.combine(xx,max)
+      stats['Max ErrStdDev'] = \
+            { 'tseries': arr, \
+              'nrep':stats['Model'+n+' ErrStdDev']['nrep'], \
+              'refvalp': 0., 'refvalm': 0., \
+              'plt_min':plot_min_def/2., \
+              'plt_max':plot_max_def/2., \
+              'plt_zero':True, \
+              'ts_coplot':None, \
+              'pcnt_norm':None, \
+              'colour': mdl_colour[i-1], \
+              'file_suff':'sdevmax'+n }
+     
+   return stats
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def print_summ_data( file, stat, sdev_dof=0 ):
+   """
+   Print summary data for a group 
+      - currently configured for groupby('id')
+   """
+   refp_str = '{:.2f}'.format(stats['refvalp'])+'     '
+   refm_str = '{:.2f}'.format(stats['refvalm'])+'     '
+
+   avg_val  = stats['tseries'].mean()
+   sdev_val = stats['tseries'].std(sdev_dof)
+   count_hi = (stats['tseries'].values > stats['refvalp']).sum()
+   count_lo = (stats['tseries'].values < stats['refvalm']).sum()
+
+   file.write('   Mean ='+'{:.4f}'.format(avg_val)+'\n' )
+   file.write('   Std. Deviation ='+'{:.4f}'.format(sdev_val)+'\n' )
+   file.write('   Number of stations = '+str(len(stats['tseries']))+'\n' )
+   file.write('   Number of stations > '+refp_str+str(count_hi)+'\n' )
+   file.write('   Number of stations < '+refm_str+str(count_lo)+'\n' )
+
+   if 'refvalp0' in stats:
+       refp0_str = '{:.2f}'.format(stats['refvalp0'])+'     '
+       count_hi0 = (stats['tseries'].values > stats['refvalp0']).sum()
+       file.write('   Number of stations > '+refp0_str+str(count_hi0)+'\n' )
+
+   if 'refvalm0' in stats:
+       refm0_str = '{:.2f}'.format(stats['refvalm0'])+'     '
+       count_lo0 = (stats['tseries'].values < stats['refvalm0']).sum()
+       file.write('   Number of stations < '+refm0_str+str(count_lo0)+'\n' )
+
+
+   return
+   
+   
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def save_input_info():
+    """
+    store information on input data
+    """
+    stats_hdr = {}
+    stats_hdr['header'] = header
+    stats_hdr['Model Field'] = model_field
+    stats_hdr['First Obs Date'] = dates[0]
+    stats_hdr['Obs Field'] = obs_field
+    stats_hdr['Date increment'] =  str(date_inc)+'hours'
+    stats_hdr['Min reports'] = str(min_rep)
+    stats_hdr['Obs Window'] = str(diff_mins)
+    stats_hdr['Forecast Step'] = str(fc_steps[0])
+    stats_hdr['Obs Window'] = str(diff_mins)
+    stats_hdr['Gross Error Tolerance'] = str(gross_error_tol)
+
+    try:
+       exec('fstr='+in_fnames[0])
+       stats_hdr['Model 0'] = fstr
+    except:
+       stats_hdr['Model 0'] = in_fnames[0]
+    if num_exp>1:
+      for i in range(1,num_exp):
+        try:
+          exec('fstr='+in_fnames[i])
+          stats_hdr['Model '+str(i)] = fstr
+        except:
+          stats_hdr['Model '+str(i)] = in_fnames[i]
+        stats_hdr['Forecast Step '+str(i)] = str(fc_steps[i])
+    return stats_hdr
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

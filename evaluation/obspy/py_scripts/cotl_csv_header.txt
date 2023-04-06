@@ -1,0 +1,1 @@
+time,cotl_id,Name,solar,rain,t1,vtd10,rh1,twet,deltaT,slp,mslP,ws2,wd2,ws10,wd10,gust2,gust10,sigmau2,sigmau10,sigmav2,sigmav10,Ri,Rib

@@ -1,0 +1,1108 @@
+---
+# Units should match text in model netcdf files
+file_attr:
+     CreationDate:
+     OBSPY_location:
+     obfile_base_cfg:
+     obfile_user_cfg:
+     network_base_cfg:
+     network_user_cfg:
+     network_name:
+     ObsStartDate:
+     ObsEndDate:
+     ObsStartTime:
+     ObsEndTime:
+     OBSPY_version:
+     institution:
+     FileHistory:
+     CurrentDirectory:
+
+var_dict:
+   latitude:
+      type: np.float32
+      obs_type: [all]
+      attributes:
+         units: degrees_north
+
+   longitude:
+      type: np.float32
+      obs_type: [all]
+      attributes:
+         units: degrees_east
+
+   date:
+      type: np.int32
+      obs_type: [all]
+      attributes:
+         units: "%Y%m%d"
+         long_name: UTC date
+
+   time:
+      type: np.int32
+      obs_type: [all]
+      attributes:
+          long_name: UTC time
+          units: "%H%M%S"
+
+   z_lev:
+      type: np.float32
+      obs_type: [surface, aircraft]
+      attributes:
+         long_name: Height of observation above ground level
+         units: m
+
+   z_lev_u:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         long_name: Secondary height of observation above ground level
+         units: m
+
+   p_lev:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+        long_name: Pressure of observation
+        units: Pa
+
+   p_levu:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+        long_name: Secondary pressure of observation
+        units: Pa
+
+   station_identifier:
+      type: "<U8"
+      odbcol: ident
+      obs_type: [surface, aircraft]
+      attributes:
+         units: string-8
+
+   station_name:
+      type: string
+      obs_type: [surface]
+      attributes:
+         units: string
+
+   obs_10m_pressure:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: Pa
+         long_name: Observed 10m pressure (derived)
+
+   obs_screen_pressure:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: Pa
+         long_name: Observed station pressure
+
+   obs_screen_pressure_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed surface pressure report flag
+
+   obs_screen_pressure_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed surface pressure data flag
+
+   bkg_screen_pressure:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Pa
+         long_name: Forecast surface pressure on model orography
+
+   adj_screen_pressure:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Pa
+         long_name: adjusted surface pressure on model orography (simple hydrostatic correction)
+
+   bkg_10m_pressure:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Pa
+         long_name: Forecast surface pressure 10m above model orography
+
+   adj_10m_pressure:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Pa
+         long_name: adjusted surface pressure 10m above model orography (simple hydrostatic correction)
+
+   obs_screen_temperature:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: K
+         long_name: Observed Screen Temperature
+
+   obs_screen_temperature_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen Temperature report flag
+
+   obs_screen_temperature_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen Temperature data flag
+
+   obs_temperature:
+      type: np.float32
+      obs_type: [aircraft]
+      attributes:
+         units: K
+         long_name: Observed Temperature
+
+   obs_temperature_repflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed Temperature report flag
+
+   obs_temperature_dataflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed Temperature data flag
+
+   bkg_screen_temperature:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Forecast Screen Temperature on model orography
+
+   adj_screen_temperature:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Height corrected forecast Screen Temperature
+
+   obs_screen_dew_point:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: K
+         long_name: Observed Screen DewPoint
+
+   obs_screen_dew_point_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen DewPoint report flag
+
+   obs_screen_dew_point_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen DewPoint data flag
+
+   obs_dew_point:
+      type: np.float32
+      obs_type: 
+         - 
+      attributes:
+         units: K
+         long_name: Observed DewPoint
+
+   bkg_screen_dew_point:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+          units: K
+          long_name: Forecast Screen DewPoint on model orography
+
+   adj_screen_dew_point:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Height corrected forecast Screen DewPoint
+
+   obs_screen_wet_bulb:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: K
+         long_name: Observed Screen Wet Bulb Temperature
+
+   obs_wet_bulb:
+      type: np.float32
+      obs_type: 
+         - 
+      attributes:
+         units: K
+         long_name: Observed Screen Wet Bulb Temperature
+
+   bkg_screen_wet_bulb:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+          units: K
+          long_name: Forecast Screen Wet Bulb Temperature on model orography
+
+   adj_screen_wet_bulb:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Height corrected forecast Screen Wet Bulb Temperature
+
+   obs_screen_relative_humidity:
+      type: np.float32
+      attributes:
+         units: "%"
+         long_name: Observed Screen Relative Humidity
+      obs_type: [surface]
+
+   obs_screen_relative_humidity_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen Relative Humidity report flag
+
+   obs_screen_relative_humidity_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen Relative Humidity data flag
+
+   obs_relative_humidity:
+      type: np.float32
+      attributes:
+         units: "%"
+         long_name: Observed Relative Humidity
+      obs_type: 
+          - 
+
+   bkg_screen_relative_humidity:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: "%"
+         long_name: Forecast Screen Relative Humidity on model orography
+
+   adj_screen_relative_humidity:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: "%"
+         long_name: Height Corrected Screen Relative Humidity on model orography
+
+   obs_screen_specific_humidity:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: kg kg-1
+         long_name: Observed Screen Specific Humidity
+
+   obs_screen_specific_humidity_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen Specific Humidity report flag
+
+   obs_screen_specific_humidity_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen Specific Humidity data flag
+
+   obs_specific_humidity:
+      type: np.float32
+      obs_type: 
+          - 
+      attributes:
+         units: kg kg-1
+         long_name: Observed Specific Humidity
+
+   bkg_screen_specific_humidity:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Forecast Screen Specific Humidity on model orography
+
+   adj_screen_specific_humidity:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Height Corrected Screen Specific Humidity on model orography
+
+   obs_screen_mixing_ratio:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Observed Screen mixing ratio
+
+   obs_mixing_ratio:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Observed mixing ratio
+
+   bkg_screen_mixing_ratio:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Forecast Screen mixing ratio on model orography
+
+   adj_screen_mixing_ratio:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Height Corrected Screen mixing ratio on model orography
+
+   obs_10m_wind_speed:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed 10m wind speed
+
+   obs_10m_wind_speed_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m wind speed report flag
+
+   obs_10m_wind_speed_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m wind speed data flag
+
+   obs_wind_speed:
+      type: np.float32
+      obs_type: [aircraft]
+      attributes:
+         units: m s-1
+         long_name: Observed wind speed
+
+   obs_wind_speed_repflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed wind speed report flag
+
+   obs_wind_speed_dataflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed wind speed data flag
+
+   obs_10m_wind_direction:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: Direction wind comes from, degrees clockwise from North
+         long_name: Observed 10m wind direction
+
+   obs_10m_wind_direction_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m wind direction report flag
+
+   obs_10m_wind_direction_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m wind direction data flag
+
+   obs_wind_direction:
+      type: np.float32
+      obs_type: [aircraft]
+      attributes:
+         units: Direction wind comes from, degrees clockwise from North
+         long_name: Observed wind direction
+
+   obs_wind_direction_repflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed wind direction report flag
+
+   obs_wind_direction_dataflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed wind direction data flag
+
+   obs_10m_windgust:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed max wind gust (at 10m) speed
+
+   obs_10m_windgust_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed max wind gust (at 10m) report flag
+
+   obs_10m_windgust_dataflag:
+      type: np.int32
+      attributes:
+         units: bit mask
+         long_name: Observed max wind gust (at 10m) data flag
+      obs_type: [surface]
+
+   bkg_10m_wind_speed:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m (model orography) wind speed
+
+   bkg_10m_wind_direction:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Direction wind comes from, degrees clockwise from North
+         long_name: Forecast 10m (station elevation) wind speed
+
+   bkg_10m_windgust:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m (model orography) wind gust speed
+
+   adj_10m_wind_speed:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m (station elevation) wind speed
+
+   adj_10m_wind_direction:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Direction wind comes from, degrees clockwise from North
+         long_name: Forecast 10m (station elevation) wind direction
+
+   adj_10m_windgust:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m (station elevation) wind gust speed
+
+   obs_10m_zonal_wind:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed 10m zonal wind (u)
+
+   obs_10m_zonal_wind_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m zonal wind (u) report flag
+
+   obs_10m_zonal_wind_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m zonal wind (u) data flag
+
+   obs_zonal_wind:
+      type: np.float32
+      obs_type: [aircraft]
+      attributes:
+         units: m s-1
+         long_name: Observed zonal wind (u)
+
+   obs_zonal_wind_repflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed zonal wind (u) report flag
+
+   obs_zonal_wind_dataflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed zonal wind (u) data flag
+
+   obs_10m_meridional_wind:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed 10m meridional wind (v)
+
+   obs_10m_meridional_wind_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m meridional wind (v) report flag
+
+   obs_10m_meridional_wind_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m meridional wind (v) data flag
+
+   obs_meridional_wind:
+      type: np.float32
+      obs_type: [aircraft]
+      attributes:
+         units: m s-1
+         long_name: Observed meridional wind (v)
+
+   obs_meridional_wind_repflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed meridional wind (v) report flag
+
+   obs_meridional_wind_dataflag:
+      type: np.int32
+      obs_type: [aircraft]
+      attributes:
+         units: bit mask
+         long_name: Observed meridional wind (v) data flag
+
+   bkg_10m_zonal_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m zonal wind (u) on model orography
+
+   bkg_10m_meridional_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m meridional wind (v) on model orography
+
+   adj_10m_zonal_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m zonal wind (v) at station elevation
+
+   adj_10m_meridional_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 10m meridional wind (v) at station elevation
+
+   bkg_surface_height:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: gpm
+         long_name: Height of model topography
+
+   obs_surface_height:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m
+         long_name: Elevation of station above MSL
+
+   obs_10m_temperature:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: K
+         long_name: Observed 10m Temperature
+
+   obs_10m_temperature_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m Temperature report flag
+
+   obs_10m_temperature_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m Temperature data flag
+
+   bkg_10m_temperature:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Forecast 10m Temperature on model orography
+
+   adj_10m_temperature:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Height corrected forecast 10m Temperature
+
+   obs_10m_dew_point:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: K
+         long_name: Observed 10m DewPoint
+
+   obs_10m_dew_point_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m DewPoint report flag
+
+   obs_10m_dew_point_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m DewPoint data flag
+
+   bkg_10m_dew_point:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Forecast 10m DewPoint on model orography
+
+   adj_10m_dew_point:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: K
+         long_name: Height corrected forecast 10m DewPoint
+
+   obs_10m_relative_humidity:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: "%"
+         long_name: Observed 10m Relative Humidity
+
+   obs_10m_relative_humidity_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m Relative Humidity report flag
+
+   obs_10m_relative_humidity_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed 10m Relative Humidity data flag
+
+   bkg_10m_relative_humidity :
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: "%"
+         long_name: Forecast 10m Relative Humidity on model orography
+
+   adj_10m_relative_humidity:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: "%"
+         long_name: Height Corrected 10m Relative Humidity on model orography
+
+   obs_10m_specific_humidity :
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Observed 10m Specific Humidity
+
+   obs_10m_specific_humidity_repflag:
+      type: np.int32
+      obs_type:
+         -
+      attributes:
+         units: bit mask
+         long_name: Observed 10m Specific Humidity report flag
+
+   obs_10m_specific_humidity_dataflag:
+      type: np.int32
+      obs_type:
+         -
+      attributes:
+         units: bit mask
+         long_name: Observed 10m Specific Humidity data flag
+
+   bkg_10m_specific_humidity:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Forecast 10m Specific Humidity on model orography
+
+   adj_10m_specific_humidity:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: kg kg-1
+         long_name: Height Corrected 10m Specific Humidity on model orography
+
+   obs_screen_zonal_wind:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed Screen zonal wind (u)
+
+   obs_screen_zonal_wind_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen zonal wind (u) report flag
+
+   obs_screen_zonal_wind_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen zonal wind (u) data flag
+
+   bco_screen_zonal_wind:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed Screen zonal wind (u), bias-corrected to zlev_u'
+
+   obs_screen_meridional_wind:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed Screen meridional wind (v)
+
+   obs_screen_meridional_wind_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen meridional wind (v) report flag
+
+   obs_screen_meridional_wind_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen meridional wind (v) data flag
+
+   bco_screen_meridional_wind:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed Screen meridional wind (v), bias-corrected to zlev_u'
+
+   obs_screen_wind_speed:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed Screen wind speed
+
+   obs_screen_wind_speed_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen wind speed report flag
+
+   obs_screen_wind_speed_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen wind speed data flag
+
+   bco_screen_wind_speed:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed Screen wind speed bias-corrected to zlev_u'
+
+   obs_screen_wind_direction:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: Direction wind comes from, degrees clockwise from North
+         long_name: Observed Screen wind direction
+
+   obs_screen_wind_direction_repflag:
+      type: np.int32
+      attributes:
+         units: bit mask
+         long_name: Observed Screen wind direction report flag
+      obs_type: [surface]
+
+   obs_screen_wind_direction_dataflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed Screen wind direction data flag
+
+   bkg_screen_zonal_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast screen zonal wind (u) on model orography
+
+   adj_screen_zonal_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast screen zonal wind (v) at station elevation
+
+   bkg_screen_meridional_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast screen meridional wind (v) on model orography
+
+   adj_screen_meridional_wind:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast screen meridional wind (v) at station elevation
+
+   bkg_screen_wind_speed:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast Screen wind speed on model orography
+
+   adj_screen_wind_direction:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Direction wind comes from, degrees clockwise from North
+         long_name: Forecast Screen wind speed at station elevation
+
+   bkg_screen_wind_direction:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: Direction wind comes from, degrees clockwise from North
+         long_name: Forecast Screen wind speed on model orography
+
+   adj_screen_wind_speed:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast Screen wind speed at station elevation
+
+   obs_screen_windgust:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed max wind gust (at 2m) speed
+
+   obs_screen_windgust_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed max wind gust (at 2m) report flag
+
+   obs_screen_windgust_repflag:
+      type: np.int32
+      obs_type: [surface]
+      attributes:
+         units: bit mask
+         long_name: Observed max wind gust (at 2m) data flag
+
+   bkg_screen_windgust:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 2m (model orography) wind gust speed
+
+   adj_screen_windgust:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m s-1
+         long_name: Forecast 2m (station elevation) wind gust speed
+
+   bkg_roughness_length:
+      type: np.float32
+      obs_type:
+         -
+      attributes:
+         units: m 
+         long_name: Model surface Monin-Obhukov roughness length
+
+   obs_screen_sigma_u:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed std. dev. of longitudinal wind (2m)'
+
+   obs_screen_sigma_v:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed std. dev. of latitudinal wind (2m)
+
+   obs_10m_sigma_u:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed std. dev. of longitudinal wind (10m)
+
+   obs_10m_sigma_v:
+      type: np.float32
+      obs_type: [surface]
+      attributes:
+         units: m s-1
+         long_name: Observed std. dev. of latitudinal wind (10m)
+
+   obs_pressure:
+      type: np.float32
+      obs_type: [aircraft]
+      attributes:
+         units: Pa
+         long_name: Pressure of observation
+
+   obs_height:
+      type: np.float32
+      obs_type: [aircraft]
+      attributes:
+         units: m
+         long_name: Height of observation above MSL
+
+   flight_phase:
+      type: np.int32
+      odbcol: flight_phase
+      obs_type: [aircraft]
+      attributes:
+         units: ordinal
+
+   obs_index:
+      nc_axis:
+      type: np.int32
+      obs_type: [all]
+      attributes:
+         units: ordinal
+         long_name: Index of observation in input file

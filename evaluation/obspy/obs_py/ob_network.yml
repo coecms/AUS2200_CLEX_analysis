@@ -1,0 +1,548 @@
+---
+network_info:
+   odb_surface: 
+      indx: 0
+      report_varno: 39
+      df_index: [date, time, station_identifier]
+      obs_dict: 
+         latitude:
+            odbcol: lat
+            units: degrees_north
+         longitude:
+            odbcol: lon
+            units: degrees_east
+         date:
+            odbcol: date
+            units: "%Y%m%d"
+         time:
+            odbcol: time
+            units: "%H%M%S"
+         station_identifier:
+            odbcol: statid
+            units: "<U8"
+         obs_screen_pressure:
+            varno: 107
+            odbcol: initial_obsvalue
+            units: Pa
+         obs_screen_pressure_repflag: 
+            varno: 107
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_screen_pressure_dataflag: 
+            varno: 107
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_screen_temperature:
+            varno: 39
+            odbcol: initial_obsvalue
+         obs_screen_temperature_repflag: 
+            varno: 39
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_screen_temperature_dataflag: 
+            varno: 39
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_screen_dew_point:
+            varno: 40
+            odbcol: initial_obsvalue
+            units: K
+         obs_screen_dew_point_repflag:
+            varno: 40
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_screen_dew_point_dataflag: 
+            mask_copy: obs_screen_relative_humidity
+            varno: 40
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_screen_relative_humidity:
+            varno: 58
+            odbcol: initial_obsvalue
+            units: kg kg-1
+            mask_copy: obs_screen_relative_humidity
+         obs_screen_relative_humidity_repflag:
+            varno: 58
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_screen_relative_humidity_dataflag:
+            varno: 58
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_10m_wind_speed:
+            varno: 112
+            odbcol: initial_obsvalue
+            units: m s-1
+            mask_copy: obs_10m_wind_speed
+         obs_10m_wind_speed_repflag:
+            varno: 112
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_10m_wind_speed_dataflag:
+            varno: 112
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_10m_wind_direction:
+            varno: 111
+            odbcol: initial_obsvalue
+            units: degrees_from_north
+            mask_copy: obs_10m_wind_speed
+         obs_10m_wind_direction_repflag:
+            varno: 111
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_10m_wind_direction_dataflag:
+            varno: 111
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_10m_zonal_wind:
+            varno: 41
+            odbcol: initial_obsvalue
+            units: m s-1
+            mask_copy: obs_10m_zonal_wind
+         obs_10m_zonal_wind_repflag:
+            varno: 41
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_10m_zonal_wind_dataflag:
+            varno: 41
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_10m_meridional_wind:
+            varno: 42
+            units: m s-1
+            odbcol: initial_obsvalue
+            mask_copy: obs_10m_zonal_wind
+         obs_10m_meridional_wind_repflag:
+            varno: 42
+            units: bit mask
+            odbcol: ops_report_flags
+         obs_10m_meridional_wind_dataflag:
+            varno: 42
+            units: bit mask
+            odbcol: ops_datum_flags
+         obs_10m_windgust:
+            varno: 261
+            units: m s-1
+            odbcol: initial_obsvalue
+         obs_10m_windgust_repflag:
+            varno: 261
+            units: bit mask
+            odbcol: ops_report_flags
+         obs_10m_windgust_dataflag:
+            varno: 261
+            units: bit mask
+            odbcol: ops_datum_flags
+         obs_surface_height:
+            odbcol: stalt
+            units: m
+         obs_screen_specific_humidity:
+            units: 'kg kg-1'
+            transform:
+              func: spechum_from_dewpt
+              var1: obs_screen_pressure
+              var2: obs_screen_dew_point
+         obs_screen_specific_humidity_repflag:
+            units: bit mask
+            transform:
+              func: return_value
+              var1: obs_screen_dew_point_repflag
+              var2: obs_screen_dew_point_repflag
+         obs_screen_specific_humidity_dataflag:
+            units: bit mask
+            transform:
+              func: return_value
+              var1: obs_screen_dew_point_dataflag
+              var2: obs_screen_dew_point_dataflag
+      tzone: 
+   odb_aircraft: 
+      indx: 0
+      report_varno: 112
+      df_index: [date, time, station_identifier, obs_pressure]
+      obs_dict: 
+         latitude:
+            odbcol: lat
+            units: degrees_north
+         longitude:
+            odbcol: lon
+            units: degrees_east
+         date:
+            odbcol: date
+            units: "%Y%m%d"
+         time:
+            odbcol: time
+            units: "%H%M%S"
+         station_identifier:
+            odbcol: statid
+            units: "<U8"
+         obs_pressure:
+            varno: 112
+            odbcol: vertco_reference_1
+            units: Pa
+         flight_phase:
+            varno: 112
+            odbcol: flight_phase
+            units: index
+         obs_height:
+            varno: 3
+            odbcol: stalt
+            units: m
+         obs_temperature:
+            varno: 2
+            odbcol: initial_obsvalue
+         obs_temperature_repflag: 
+            varno: 2
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_temperature_dataflag: 
+            varno: 2
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_wind_speed:
+            varno: 112
+            odbcol: initial_obsvalue
+            units: m s-1
+            mask_copy: obs_wind_speed
+         obs_wind_speed_repflag:
+            varno: 112
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_wind_speed_dataflag:
+            varno: 112
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_wind_direction:
+            varno: 111
+            odbcol: initial_obsvalue
+            units: degrees_from_north
+            mask_copy: obs_wind_speed
+         obs_wind_direction_repflag:
+            varno: 111
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_wind_direction_dataflag:
+            varno: 111
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_zonal_wind:
+            varno: 3
+            odbcol: obsvalue
+            units: m s-1
+            mask_copy: obs_zonal_wind
+         obs_zonal_wind_repflag:
+            varno: 3
+            odbcol: ops_report_flags
+            units: bit mask
+         obs_zonal_wind_dataflag:
+            varno: 3
+            odbcol: ops_datum_flags
+            units: bit mask
+         obs_meridional_wind:
+            varno: 4
+            units: m s-1
+            odbcol: obsvalue
+            mask_copy: obs_zonal_wind
+         obs_meridional_wind_repflag:
+            varno: 4
+            units: bit mask
+            odbcol: ops_report_flags
+         obs_meridional_wind_dataflag:
+            varno: 4
+            units: bit mask
+            odbcol: ops_datum_flags
+      tzone: 
+# obs_dict:
+#       key=csv variable
+#      item=obfile_info variable  OR
+#               link to key in dictionary if no direct match with obfile_info
+#               which will be used in obs_py convert_data
+   goanna ag : 
+      indx: 1
+      tzone: find
+      type: moon 
+      local_id:
+         add: GOAA
+         len: 8
+   telstra : 
+      indx: 2
+      tzone: find
+      type: moon
+      local_id:
+         add: TELS
+         len: 8
+   ozforecast : 
+      indx: 3
+      tzone: find
+      type: moon
+      local_id:
+         add: OZFC
+         len: 8
+   cotl : 
+      indx: 4
+      tzone: Australia/South
+      type: moon
+      csv_axis:   # columns in csv file to use as axis
+        - time
+        - cotl_id
+      nc_skip: [station_name]
+      inv_dict: 
+      obs_dict :  # maps variables in input file to obs_py variables
+            datetime:
+               var: datetime
+               format: "%Y-%m-%d %H:%M:%S"
+               transform:  
+                   date: 
+                      func: local_datetime_utc_date
+                      units: "%Y%m%d"
+                   time: 
+                      func: local_datetime_utc_time
+                      units: "%H%M%S"
+            Name: 
+               var: station_name
+               units: string
+            cotl_id:
+               var: local_id
+               transform:
+                  station_identifier:
+                      func: encode_id
+                      units: string-8
+                      add: COTL
+                      len: 8 
+            Lat:
+               var: latitude
+               units: degrees_north
+            Long:
+               var: longitude
+               units: degrees_east
+            t1:
+               var: obs_screen_temperature
+               units: C
+            twet:
+               var: obs_screen_wet_bulb
+               units: C
+            vtd10:
+               var: vertical_temperature_difference
+               transform:
+                  obs_10m_temperature:
+                      func: add_vert_temp_diff
+                      ref: obs_screen_temperature
+                      units: C
+            rh1:
+               var: obs_screen_relative_humidity
+               units: "%"
+            td: 
+               var: obs_screen_dew_point
+               transform:
+                  obs_screen_dew_point:
+                      func: dewpt_from_rh
+                      t: obs_screen_temperature
+                      rh: obs_screen_relative_humidity
+                      units: K
+            slp:
+               var: obs_screen_pressure
+               units: hPa
+            ws10:
+               var: obs_10m_wind_speed
+               units: m s-1
+            wd10:
+               var: obs_10m_wind_direction
+               units: Direction wind comes from, degrees clockwise from North
+            u10: 
+               var: obs_10m_zonal_wind
+               transform:
+                  obs_10m_zonal_wind:
+                      func: ffddd_to_u
+                      dir: obs_10m_wind_direction
+                      speed: obs_10m_wind_speed
+                      units: m s-1
+            v10: 
+               var: obs_10m_meridional_wind
+               transform:
+                  obs_10m_meridional_wind:
+                      func: ffddd_to_v
+                      dir: obs_10m_wind_direction
+                      speed: obs_10m_wind_speed
+                      units: m s-1
+            gust10:
+               var: obs_10m_windgust
+               units: m s-1
+            ws2:
+               var: obs_screen_wind_speed
+               units: m s-1
+            wd2:
+               var: obs_screen_wind_direction
+               units: Direction wind comes from, degrees clockwise from North
+            u2m: 
+               var: obs_screen_zonal_wind
+               transform:
+                  obs_screen_zonal_wind:
+                      func: ffddd_to_u
+                      dir: obs_screen_wind_direction
+                      speed: obs_screen_wind_speed
+                      units: m s-1
+            v2m: 
+               var: obs_screen_meridional_wind
+               transform:
+                  obs_screen_meridional_wind:
+                      func: ffddd_to_v
+                      dir: obs_screen_wind_direction
+                      speed: obs_screen_wind_speed
+                      units: m s-1
+            gust2:
+               var: obs_screen_windgust
+               units: m s-1
+            sigmau2:
+               var: obs_screen_sigma_u
+               units: m s-1
+            sigmav2:
+               var: obs_screen_sigma_v
+               units: m s-1
+            sigmau10:
+               var: obs_10m_sigma_u
+               units: m s-1
+            sigmav10:
+               var: obs_10m_sigma_v
+               units: m s-1
+            alt:
+               var: obs_surface_height
+               units: m
+            z_lev:
+               var: z_lev
+               units: m
+            z_lev_u:
+               var: z_lev_u
+               units: m
+      station_data:   # station data not in network csv file
+         latitude:
+         longitude:
+         obs_surface_height:
+         z_lev:
+            val: 1.5
+         z_lev_u:
+            val: 10.
+   geoscience : 
+      indx: 5
+      tzone: find
+      type: moon
+      local_id:
+         add: GEOS 
+         len: 8
+   attentis : 
+      indx: 6
+      tzone: find
+      type: moon
+      local_id:
+         add: ATTN
+         len: 8
+   lsa : 
+      indx: 7
+      tzone: find
+      type: moon
+      local_id:
+         add: LSA_
+         len: 8
+   wadpird : 
+      indx: 8
+      tzone: find
+      type: moon
+      local_id:
+         add: WADP
+         len: 8
+   metos : 
+      indx: 9
+      tzone: find
+      type: moon
+      local_id:
+         add: METO
+         len: 8
+   environ_data : 
+      indx: 10
+      tzone: find
+      type: moon
+      local_id:
+         add: ENVD 
+         len: 8
+   electranet : 
+      indx: 11
+      tzone: Australia/South
+      type: moon
+      csv_axis:   # columns in csv file to use as axis
+        - DateTime
+        - Site
+      inv_dict: 
+      nc_skip: [station_name]
+      obs_dict :  # maps variables in input file to obs_py variables
+            DateTime:
+               var: datetime
+               format: "%Y-%m-%d %H:%M:%S.%f"
+               transform:  
+                   date: 
+                      func: local_datetime_utc_date
+                      units: "%Y%m%d"
+                   time: 
+                      func: local_datetime_utc_time
+                      units: "%H%M%S"
+            SITE_NAME: 
+               var: station_name
+               units: string
+            Site:
+               var: local_id
+               transform:
+                  station_identifier:
+                      func: encode_id
+                      units: string-8
+                      add: EN
+                      len: 8 
+                      delim: _
+                      delim_indx: 1
+            LATITUDE:
+               var: latitude
+               units: degrees_north
+            LONGITUDE:
+               var: longitude
+               units: degrees_east
+            HEIGHT:
+               var: obs_surface_height
+               units: m
+            Temp:
+               var: obs_screen_temperature
+               units: C
+            RH:
+               var: obs_screen_relative_humidity
+            WSpdAvge:
+               var: obs_screen_wind_speed
+               units: m s-1
+            WDirAvge:
+               var: obs_screen_wind_direction
+               units: Direction wind comes from, degrees clockwise from North
+            u2m: 
+               var: obs_screen_zonal_wind
+               transform:
+                  obs_screen_zonal_wind:
+                      func: ffddd_to_u
+                      dir: obs_screen_wind_direction
+                      speed: obs_screen_wind_speed
+                      units: m s-1
+            v2m: 
+               var: obs_screen_meridional_wind
+               transform:
+                  obs_screen_meridional_wind:
+                      func: ffddd_to_v
+                      dir: obs_screen_wind_direction
+                      speed: obs_screen_wind_speed
+                      units: m s-1
+            z_lev:
+               var: z_lev
+               units: m
+            z_lev_u:
+               var: z_lev_u
+               units: m
+      station_data:   # station data not in network csv file
+         station_name:
+         latitude:
+         longitude:
+         obs_surface_height:
+         z_lev:
+            val: 1.5
+         z_lev_u:
+            val: 10.

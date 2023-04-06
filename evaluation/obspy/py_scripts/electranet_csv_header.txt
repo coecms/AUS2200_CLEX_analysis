@@ -1,0 +1,1 @@
+ID,Site,DateTime,WDirMin,WDirAvge,WDirMax,WSpdMin,WSpdAvge,WSpdMax,Temp,RH,Rain_Tot,Rain_Dur,Rain_Int,VAisday_Rain

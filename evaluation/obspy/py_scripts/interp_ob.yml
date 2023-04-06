@@ -1,0 +1,40 @@
+  stn_id:                  # default is to use all stations
+  da_window: 360           # da window (minutes)
+  fc_frequency: 360        # time between different forecasts (minutes)
+  use_end_dt: False        # Option to use obs at end of forecast window
+  lat_range:               # default is to use all grid latitudes
+  lon_range:               # default is to use all grid longitudes
+  time_range:              # default is to use all times
+  date_range:              # default is to use all times
+  dt_range:                # default is to use all times (min/max ints)
+  dt_str_range:            # default is to use all times (min/max strings)
+  allow_all_sea:           # default is False
+  max_check_file_iter: 5   # number of da windows to search for substitute data
+  max_base_dt:             # use all basedate-times (debugging option)
+  file_dt_check: base_dt   # use base_datetime (or valid_datetimes) to determine which files to use
+  dbg_parms:
+    np_dbg_len: 10           # length of debug prints for numpy arrays
+  auxiliary_field:
+  sfc_fields: True         # interpolating surface fields & applying height corrections
+  pl_fields: False         # interpolating pressure level fields
+  ml_fields: False         # interpolating model level fields
+  transformed_field:
+    - wet_bulb
+    - specific_humidity
+    - wind_speed
+    - wind_direction
+  fc_step_unit: hour     # 'h', 'm' or 's' for forecast length command line option
+  gfile_meta:
+     fmt_type: mars_ncdf.1
+     lev_type:            # default is 'sfc'
+     arch_root:           # default is to use NC_ARCH environment variable or ./
+     fc_type:             # default is 'fcmm'
+     dt_fmt:              # default is obs_py.dtf_grid
+     var_info:            # variable specific info
+  vertical_interp:
+     ml_zonal_wind:
+        level: 500
+        units: m
+     ml_meridional_wind:
+        level: 500
+        units: m

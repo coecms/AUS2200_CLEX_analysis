@@ -1,0 +1,13 @@
+  da_window: 60           # da window (minutes)
+  auxiliary_field:
+    - roughness_length
+  transformed_field:
+    - 10m_temperature
+    - 10m_relative_humidity
+    - screen_zonal_wind
+    - screen_meridional_wind
+    - screen_wind_speed
+    - screen_wind_direction
+    - screen_windgust
+  gfile_meta:
+    fc_type: fc
